@@ -1,4 +1,12 @@
-*{
- padding: 0;
- margin: 0;
+@font-face {
+  font-family: Cards;
+  src: url('font_old.ttf') format('truetype');
+  unicode-range: all;
+}
+* {
+  padding: 0;
+  margin: 0;
+}
+.card {
+  font-family: Cards;
 }
