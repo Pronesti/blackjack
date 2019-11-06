@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { addCardToHand, addCardToTable, resetGame, removeCredits, addCredits, setMsg, setStay, setFinishGame } from './actions/gameActions';
+import { addCardToHand, addCardToTable, resetGame, removeCredits, addCredits, setMsg, setStay, setFinishGame, createNewDeck } from './actions/gameActions';
 
 import BrowserRouter from 'react-router-dom/BrowserRouter';
 import Route from 'react-router-dom/Route';
@@ -11,9 +11,6 @@ import BottomBar from './components/BottomBar';
 import PopUp from './components/PopUp';
 import BlackJack from './views/BlackJack';
 
-var typesArray = ['spades', 'hearts', 'diamonds', 'clubs'];
-var valuesArray = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13'];
-
 const appStyle = { overflow: 'hidden' };
 
 function App() {
@@ -21,25 +18,10 @@ function App() {
   const dispatch = useDispatch();
   const table = useSelector(state => state.app.table);
   const hand = useSelector(state => state.app.hand);
+  const lastCard = useSelector(state => state.app.lastCard);
 
   function createDeck() {
-    for (var i = 0; i < valuesArray.length; i++) {
-      for (var x = 0; x < typesArray.length; x++) {
-        var card = { number: valuesArray[i], type: typesArray[x] };
-        deck.push(card);
-      }
-    }
-  }
-
-  function shuffle() {
-    for (var i = 0; i < 1000; i++) {
-      var location1 = Math.floor(Math.random() * deck.length);
-      var location2 = Math.floor(Math.random() * deck.length);
-      var tmp = deck[location1];
-
-      deck[location1] = deck[location2];
-      deck[location2] = tmp;
-    }
+    dispatch(createNewDeck());
   }
 
   function dealHands() {
@@ -108,18 +90,23 @@ function App() {
     let tablesA = table.filter(element => element.number === '1').length;
     if (tablesA > 0 && tableScore + 10 < 22) {
       // se fija si el As con 11 no se pasa
+      console.log('+1 y le sirve');
       tableScore += 10;
     }
+    console.log(tableScore);
     while (tableScore < 17) {
-      let card1 = deck.pop();
-      dispatch(addCardToTable(card1));
-      if (card1.number === '1' && tableScore + 10 < 22) {
+      dispatch(addCardToTable());
+      console.log(lastCard); // does not update and repeats the first value in all cycle
+      if (lastCard.number === '1' && tableScore + 10 < 22) {
+        console.log('1');
         //checks for As better value
         tableScore += 11;
-      } else if (card1.number > 10) {
+      } else if (lastCard.number > 10) {
+        console.log('2');
         tableScore += 10;
       } else {
-        tableScore += Number(card1.number);
+        console.log('3');
+        tableScore += Number(lastCard.number);
       }
     }
 
@@ -184,7 +171,6 @@ function App() {
     dispatch(resetGame());
     dispatch(removeCredits(1));
     createDeck();
-    shuffle();
     dealHands();
   }
 
@@ -192,20 +178,19 @@ function App() {
     if (check(hand) !== -1) {
     } else {
       dispatch(setMsg('Table wins.'));
-      dispatch(setFinishGame(true))
+      dispatch(setFinishGame(true));
     }
   }, [hand, dispatch]);
 
   useEffect(() => {
     if (check(table) !== -1) {
     } else {
-      dispatch(setFinishGame(true))
+      dispatch(setFinishGame(true));
     }
   }, [table]);
 
   useEffect(() => {
     createDeck();
-    shuffle();
     dealHands();
   }, []);
 

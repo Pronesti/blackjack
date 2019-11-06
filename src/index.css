@@ -1,6 +1,6 @@
 @font-face {
   font-family: Cards;
-  src: url('font_old.ttf') format('truetype');
+  src: url('Symbola.ttf') format('truetype');
   unicode-range: all;
 }
 * {

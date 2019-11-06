@@ -1,14 +1,46 @@
-const appReducer = (state = { credits: 10, show_msg: false, msg: '', hand: [], table: [], showCard: false, stay: false, finishGame: false }, action) => {
+const appReducer = (
+  state = { credits: 10, show_msg: false, msg: '', deck: [], hand: [], table: [], lastCard: {}, showCard: false, stay: false, finishGame: false },
+  action
+) => {
   switch (action.type) {
-    case 'ADD_CARD_TO_HAND':
+    case 'CREATE_NEW_DECK':
+      let typesArray = ['spades', 'hearts', 'diamonds', 'clubs'];
+      let valuesArray = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13'];
+      let newDeck = [];
+      for (let i = 0; i < valuesArray.length; i++) {
+        for (let x = 0; x < typesArray.length; x++) {
+          let card = { number: valuesArray[i], type: typesArray[x] };
+          newDeck.push(card);
+        }
+      }
+      for (let i = 0; i < 1000; i++) {
+        let location1 = Math.floor(Math.random() * newDeck.length);
+        let location2 = Math.floor(Math.random() * newDeck.length);
+        let tmp = newDeck[location1];
+
+        newDeck[location1] = newDeck[location2];
+        newDeck[location2] = tmp;
+      }
       return {
         ...state,
-        hand: state.hand.concat(action.payload)
+        deck: newDeck
+      };
+    case 'ADD_CARD_TO_HAND':
+      let copyDeck = state.deck;
+      let card = copyDeck.pop();
+      return {
+        ...state,
+        hand: state.hand.concat(card),
+        deck: copyDeck
       };
     case 'ADD_CARD_TO_TABLE':
+      let copyDeck2 = state.deck;
+      let card2 = copyDeck2.pop();
       return {
         ...state,
-        table: state.table.concat(action.payload)
+        lastCard: card2,
+        table: state.table.concat(card2),
+        deck: copyDeck2
       };
     case 'ADD_CREDITS':
       return {
