@@ -25,11 +25,11 @@ export default function BlackJack() {
   const showCard = useSelector(state => state.app.showCard);
   return (
     <React.Fragment>
-      <Paper style={tableStyle}>
+      <Paper style={tableStyle} elevation={0}>
         <Container type='TABLE' visible={showCard} cards={table} />
       </Paper>
-      <Paper style={handStyle}>
-        <Container type='HAND' cards={hand} />
+      <Paper style={handStyle}  elevation={0}>
+        <Container type='HAND' cards={hand}/>
       </Paper>
     </React.Fragment>
   );
