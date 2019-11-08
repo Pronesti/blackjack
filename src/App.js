@@ -18,7 +18,6 @@ function App() {
   const dispatch = useDispatch();
   const table = useSelector(state => state.app.table);
   const hand = useSelector(state => state.app.hand);
-  const lastCard = useSelector(state => state.app.lastCard);
 
   function createDeck() {
     dispatch(createNewDeck());
@@ -66,57 +65,28 @@ function App() {
     }
   }
 
-  function checkGame() {
-    let playerScore = hand
-      .map(element => {
-        if (element.number > 10) {
-          return 10;
-        } else {
-          return Number(element.number);
-        }
-      })
-      .reduce((accumulator, currentValue) => accumulator + currentValue, 0);
-
-    let tableScore = table
-      .map(element => {
-        if (element.number > 10) {
-          return 10;
-        } else {
-          return Number(element.number);
-        }
-      })
-      .reduce((accumulator, currentValue) => accumulator + currentValue, 0);
-
-    let tablesA = table.filter(element => element.number === '1').length;
-    if (tablesA > 0 && tableScore + 10 < 22) {
-      // se fija si el As con 11 no se pasa
-      console.log('+1 y le sirve');
-      tableScore += 10;
+  /* function under17(tableScore){
+    if(tableScore >= 17){
+      return tableScore;
     }
-    console.log(tableScore);
-    while (tableScore < 17) {
+    else {
       dispatch(addCardToTable());
       console.log(lastCard); // does not update and repeats the first value in all cycle
       if (lastCard.number === '1' && tableScore + 10 < 22) {
         console.log('1');
         //checks for As better value
-        tableScore += 11;
+        return under17((tableScore + 11));
       } else if (lastCard.number > 10) {
         console.log('2');
-        tableScore += 10;
+        return under17((tableScore + 10));
       } else {
         console.log('3');
-        tableScore += Number(lastCard.number);
+        return under17((tableScore + Number(lastCard.number)));
       }
     }
+  } */
 
-    let playersA = hand.filter(element => element.number === '1').length;
-    console.log('PlayersA: ', playersA, ' TablesA: ', tablesA);
-
-    if (playersA > 0 && playerScore + 10 < 22) {
-      // checks for As better value
-      playerScore += 10;
-    }
+  function checkGame() {
 
     console.log('player: ', playerScore, ' table:', tableScore);
 
@@ -157,14 +127,9 @@ function App() {
     }
   }
 
-  function playTable() {
-    checkGame();
-  }
-
   function stay() {
-    console.log('stay');
     dispatch(setStay(true));
-    playTable();
+    checkGame();
   }
 
   function restartGame() {
