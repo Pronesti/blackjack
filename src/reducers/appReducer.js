@@ -1,5 +1,5 @@
 const appReducer = (
-  state = { credits: 10, show_msg: false, msg: '', deck: [], hand: [], table: [], lastCard: {}, showCard: false, stay: false, finishGame: false, scoreTable: 0, scoreHand: 0 },
+  state = { credits: 10, show_msg: false, msg: '', deck: [], hand: [], table: [], lastCard: {}, showCard: false, stay: false, finishGame: false, scoreTable: 0, scoreHand: 0, readyToCheck: false },
   action
 ) => {
   switch (action.type) {
@@ -103,6 +103,7 @@ const appReducer = (
         finishGame: false,
         stay: false,
         showCard: false,
+        readyToCheck: false,
         hand: [],
         table: []
       };
@@ -134,7 +135,8 @@ const appReducer = (
         showCard: action.payload,
         table: nextTable3,
         deck: copyDeck3,
-        scoreTable: calculateScore3
+        scoreTable: calculateScore3,
+        readyToCheck: true
       };
     case 'FINISH_GAME':
       return {

@@ -20,6 +20,7 @@ function App() {
   const hand = useSelector(state => state.app.hand);
   const playerScore = useSelector(state => state.app.scoreHand);
   const tableScore = useSelector(state => state.app.scoreTable);
+  const readyToCheck = useSelector(state => state.app.readyToCheck);
 
   function createDeck() {
     dispatch(createNewDeck());
@@ -89,9 +90,8 @@ function App() {
   } */
 
   function checkGame() {
-
+    if(readyToCheck){
     console.log('player: ', playerScore, ' table:', tableScore);
-
     if (playerScore > 21) {
       //instant defeat
       dispatch(setMsg('Table wins.'));
@@ -128,10 +128,10 @@ function App() {
       }
     }
   }
+}
 
   function stay() {
     dispatch(setStay(true));
-    checkGame();
   }
 
   function restartGame() {
@@ -149,12 +149,9 @@ function App() {
     }
   }, [hand, dispatch]);
 
-  useEffect(() => {
-    if (check(table) !== -1) {
-    } else {
-      dispatch(setFinishGame(true));
-    }
-  }, [table]);
+  useEffect(()=>{
+    checkGame();
+  },[readyToCheck, checkGame])
 
   useEffect(() => {
     createDeck();
@@ -164,9 +161,11 @@ function App() {
   useEffect(() => {
     //Debugger
     console.log({
-      deck: deck,
-      hand: hand,
-      table: table
+       deck,
+       hand,
+       table,
+      playerScore,
+      tableScore
     });
   }, [table, hand, deck]);
 

@@ -9,7 +9,7 @@ const cardsArray = {
 
 export default function Card({ number, type }) {
   return (
-    <span className='card' style={{ fontSize: 100 }}>
+    <span className='card' style={{ fontSize: '1000%' }}>
       {cardsArray[type][number]}
     </span>
   );
