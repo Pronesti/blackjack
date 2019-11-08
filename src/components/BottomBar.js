@@ -13,9 +13,9 @@ const bottomStyle = {
 };
 
 export default function BottomBar({ hitMe, stay, restartGame }) {
-  const isStay = useSelector(state => state.app.stay);
-  const finishGame = useSelector(state => state.app.finishGame);
-  const credits = useSelector(state => state.app.credits);
+  const isStay = useSelector(state => state.app.gameStatus.stay);
+  const finishGame = useSelector(state => state.app.gameStatus.finishGame);
+  const credits = useSelector(state => state.app.app.credits);
   return (
     <BottomNavigation showLabels style={bottomStyle}>
       <BottomNavigationAction label='Hit' disabled={isStay || finishGame} onClick={hitMe} icon={<TouchIcon />} />

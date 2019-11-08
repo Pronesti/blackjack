@@ -9,7 +9,7 @@ import IconButton from '@material-ui/core/IconButton';
 import CreditsIcon from '@material-ui/icons/MonetizationOn';
 
 export default function TopBar() {
-  const credits = useSelector(state => state.app.credits);
+  const credits = useSelector(state => state.app.app.credits);
   return (
     <AppBar position='static' style={{ margin: 0 }}>
       <Toolbar>

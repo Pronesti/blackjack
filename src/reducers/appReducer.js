@@ -4,28 +4,11 @@ const appReducer = (
 ) => {
   switch (action.type) {
     case 'CREATE_NEW_DECK':
-      let typesArray = ['spades', 'hearts', 'diamonds', 'clubs'];
-      let valuesArray = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13'];
-      let newDeck = [];
-      for (let i = 0; i < valuesArray.length; i++) {
-        for (let x = 0; x < typesArray.length; x++) {
-          let card = { number: valuesArray[i], type: typesArray[x] };
-          newDeck.push(card);
-        }
-      }
-      for (let i = 0; i < 1000; i++) {
-        let location1 = Math.floor(Math.random() * newDeck.length);
-        let location2 = Math.floor(Math.random() * newDeck.length);
-        let tmp = newDeck[location1];
-
-        newDeck[location1] = newDeck[location2];
-        newDeck[location2] = tmp;
-      }
       return {
         ...state,
         game:{  
         ...state.game,
-        deck: newDeck,
+        deck: createDeck(),
         hand: [],
         table: [],
         },
@@ -65,10 +48,10 @@ const appReducer = (
         }
       };
     case 'ADD_CARD_TO_TABLE':
-      let copyDeck2 = state.game.deck; //refactor this names
-      let card2 = copyDeck2.pop();
-      let nextTable = state.game.table.concat(card2);
-      let calculateAs2 = nextTable.filter(element => element.number === '1').length;
+      let getCopyOfDeck = state.game.deck;
+      let getCard = getCopyOfDeck.pop();
+      let nextTable = state.game.table.concat(getCard);
+      let getAs = nextTable.filter(element => element.number === '1').length;
       let calculateScore2 = nextTable
       .map(element => {
         if (element.number > 10) {
@@ -78,7 +61,7 @@ const appReducer = (
         }
       })
       .reduce((accumulator, currentValue) => accumulator + currentValue, 0);
-      if(calculateAs2 > 0 && ((calculateScore2 + 10) < 22)){
+      if(getAs > 0 && ((calculateScore2 + 10) < 22)){
         calculateScore2 += 10
       }
 
@@ -86,8 +69,8 @@ const appReducer = (
         ...state,
         game:{
           ...state.game,
-          table: state.game.table.concat(card2),
-          deck: copyDeck2
+          table: state.game.table.concat(getCard),
+          deck: getCopyOfDeck
         },
         score:{
           ...state.score,
@@ -99,7 +82,7 @@ const appReducer = (
         ...state,
         app:{
           ...state.app,
-          credits: state.credits + action.payload
+          credits: state.app.credits + action.payload
         }
       };
     case 'REMOVE_CREDITS':
@@ -107,19 +90,25 @@ const appReducer = (
         ...state,
         app:{
           ...state.app,
-          credits: state.credits - action.payload
+          credits: state.app.credits - action.payload
         }
       };
     case 'SET_MSG':
       return {
         ...state,
-        msg: action.payload,
-        show_msg: true
+        app:{
+          ...state.app,
+          msg: action.payload,
+          show_msg: true
+        }
       };
     case 'SHOW_MSG':
       return {
         ...state,
-        show_msg: action.payload
+        app:{
+          ...state.app,
+          show_msg: action.payload
+        }
       };
     case 'RESET_GAME':
       return {
@@ -129,23 +118,26 @@ const appReducer = (
           finishGame: false,
         stay: false,
         showCard: false,
-        readyToCheck: false,
         },
         game:{
           ...state.game,
           hand: [],
           table: []
+        },
+        score:{
+          ...state.score,
+          readyToCheck: false,
         }
       };
     case 'STAY':
-      let copyDeck3 = state.game.deck; //need to refactor this names
+      let copy_deck = state.game.deck; 
       let calculateScore3 = state.score.table;
-      let nextTable3 = state.game.table;
+      let next_table = state.game.table;
       while(calculateScore3 < 17){
-      let card3 = copyDeck3.pop();
-      nextTable3 = nextTable3.concat(card3);
-      let calculateAs3 = nextTable3.filter(element => element.number === '1').length;
-      calculateScore3 = nextTable3
+      let get_card = copy_deck.pop();
+      next_table = next_table.concat(get_card);
+      let get_As = next_table.filter(element => element.number === '1').length;
+      calculateScore3 = next_table
       .map(element => {
         if (element.number > 10) {
           return 10;
@@ -154,7 +146,7 @@ const appReducer = (
         }
       })
       .reduce((accumulator, currentValue) => accumulator + currentValue, 0);
-      if(calculateAs3 > 0 && ((calculateScore3 + 10) < 22)){
+      if(get_As > 0 && ((calculateScore3 + 10) < 22)){
         calculateScore3 += 10
       }
       
@@ -163,8 +155,8 @@ const appReducer = (
         ...state,
         game:{
           ...state.game,
-          table: nextTable3,
-          deck: copyDeck3,
+          table: next_table,
+          deck: copy_deck,
         },
         gameStatus:{
           ...state.gameStatus,
@@ -173,8 +165,8 @@ const appReducer = (
         },
         score:{
           ...state.score,
-          scoreTable: calculateScore3,
-        readyToCheck: true
+          table: calculateScore3,
+          readyToCheck: true
         }
       };
     case 'FINISH_GAME':
@@ -182,12 +174,35 @@ const appReducer = (
         ...state,
         gameStatus:{
           ...state.gameStatus,
-          finishGame: action.payload
+          finishGame: action.payload,
+          showCard: true,
+          stay: true
         }
       };
     default:
       return state;
   }
 };
+
+const createDeck = () => {
+  let typesArray = ['spades', 'hearts', 'diamonds', 'clubs'];
+      let valuesArray = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13'];
+      let newDeck = [];
+      for (let i = 0; i < valuesArray.length; i++) {
+        for (let x = 0; x < typesArray.length; x++) {
+          let card = { number: valuesArray[i], type: typesArray[x] };
+          newDeck.push(card);
+        }
+      }
+      for (let i = 0; i < 1000; i++) {
+        let location1 = Math.floor(Math.random() * newDeck.length);
+        let location2 = Math.floor(Math.random() * newDeck.length);
+        let tmp = newDeck[location1];
+
+        newDeck[location1] = newDeck[location2];
+        newDeck[location2] = tmp;
+      }
+      return newDeck;
+}
 
 export default appReducer;

@@ -8,12 +8,14 @@ import IconButton from '@material-ui/core/IconButton';
 import Icon from '@material-ui/core/Icon';
 
 export default function PopUp() {
-  const msg = useSelector(state => state.app.msg);
-  const show_Msg = useSelector(state => state.app.show_msg);
+  const msg = useSelector(state => state.app.app.msg);
+  const show_Msg = useSelector(state => state.app.app.show_msg);
   const dispatch = useDispatch();
   const handleClose = () => {
     dispatch(showMsg(false));
   };
+
+  console.log(msg)
   return (
     <Snackbar open={show_Msg} onClose={handleClose}>
       <SnackbarContent
