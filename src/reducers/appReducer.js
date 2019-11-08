@@ -1,5 +1,5 @@
 const appReducer = (
-  state = { credits: 10, show_msg: false, msg: '', deck: [], hand: [], table: [], lastCard: {}, showCard: false, stay: false, finishGame: false, scoreTable: 0, scoreHand: 0, readyToCheck: false },
+  state = { app: {credits: 10, show_msg: false, msg: ''}, game: {deck: [], hand: [], table: []},  gameStatus: {showCard: false, stay: false, finishGame: false}, score: {table: 0, hand: 0, readyToCheck: false} },
   action
 ) => {
   switch (action.type) {
@@ -23,16 +23,22 @@ const appReducer = (
       }
       return {
         ...state,
+        game:{  
+        ...state.game,
         deck: newDeck,
         hand: [],
         table: [],
-        scoreHand: 0,
-        scoreTable: 0
+        },
+        score:{
+          ...state.score,
+          hand: 0,
+          table: 0
+        }   
       };
     case 'ADD_CARD_TO_HAND':
-      let copyDeck = state.deck;
+      let copyDeck = state.game.deck;
       let card = copyDeck.pop();
-      let nextHand = state.hand.concat(card);
+      let nextHand = state.game.hand.concat(card);
       let calculateAs = nextHand.filter(element => element.number === '1').length;
       let calculateScore = nextHand
       .map(element => {
@@ -48,14 +54,20 @@ const appReducer = (
       }
       return {
         ...state,
-        hand: state.hand.concat(card),
-        deck: copyDeck,
-        scoreHand: calculateScore
+        game: {
+          ...state.game,
+          hand: state.game.hand.concat(card),
+          deck: copyDeck
+        },
+        score:{
+          ...state.score,    
+        hand: calculateScore
+        }
       };
     case 'ADD_CARD_TO_TABLE':
-      let copyDeck2 = state.deck; //refactor this names
+      let copyDeck2 = state.game.deck; //refactor this names
       let card2 = copyDeck2.pop();
-      let nextTable = state.table.concat(card2);
+      let nextTable = state.game.table.concat(card2);
       let calculateAs2 = nextTable.filter(element => element.number === '1').length;
       let calculateScore2 = nextTable
       .map(element => {
@@ -72,19 +84,31 @@ const appReducer = (
 
       return {
         ...state,
-        table: state.table.concat(card2),
-        deck: copyDeck2,
-        scoreTable: calculateScore2
+        game:{
+          ...state.game,
+          table: state.game.table.concat(card2),
+          deck: copyDeck2
+        },
+        score:{
+          ...state.score,
+          table: calculateScore2
+        }
       };
     case 'ADD_CREDITS':
       return {
         ...state,
-        credits: state.credits + action.payload
+        app:{
+          ...state.app,
+          credits: state.credits + action.payload
+        }
       };
     case 'REMOVE_CREDITS':
       return {
         ...state,
-        credits: state.credits - action.payload
+        app:{
+          ...state.app,
+          credits: state.credits - action.payload
+        }
       };
     case 'SET_MSG':
       return {
@@ -100,17 +124,23 @@ const appReducer = (
     case 'RESET_GAME':
       return {
         ...state,
-        finishGame: false,
+        gameStatus:{
+          ...state.gameStatus,
+          finishGame: false,
         stay: false,
         showCard: false,
         readyToCheck: false,
-        hand: [],
-        table: []
+        },
+        game:{
+          ...state.game,
+          hand: [],
+          table: []
+        }
       };
     case 'STAY':
-      let copyDeck3 = state.deck; //need to refactor this names
-      let calculateScore3 = state.scoreTable;
-      let nextTable3 = state.table;
+      let copyDeck3 = state.game.deck; //need to refactor this names
+      let calculateScore3 = state.score.table;
+      let nextTable3 = state.game.table;
       while(calculateScore3 < 17){
       let card3 = copyDeck3.pop();
       nextTable3 = nextTable3.concat(card3);
@@ -131,17 +161,29 @@ const appReducer = (
       }
       return {
         ...state,
-        stay: action.payload,
-        showCard: action.payload,
-        table: nextTable3,
-        deck: copyDeck3,
-        scoreTable: calculateScore3,
+        game:{
+          ...state.game,
+          table: nextTable3,
+          deck: copyDeck3,
+        },
+        gameStatus:{
+          ...state.gameStatus,
+          stay: action.payload,
+          showCard: action.payload,
+        },
+        score:{
+          ...state.score,
+          scoreTable: calculateScore3,
         readyToCheck: true
+        }
       };
     case 'FINISH_GAME':
       return {
         ...state,
-        finishGame: action.payload
+        gameStatus:{
+          ...state.gameStatus,
+          finishGame: action.payload
+        }
       };
     default:
       return state;

@@ -20,9 +20,9 @@ const tableStyle = {
   marginTop: 2
 };
 export default function BlackJack() {
-  const hand = useSelector(state => state.app.hand);
-  const table = useSelector(state => state.app.table);
-  const showCard = useSelector(state => state.app.showCard);
+  const hand = useSelector(state => state.app.game.hand);
+  const table = useSelector(state => state.app.game.table);
+  const showCard = useSelector(state => state.app.gameStatus.showCard);
   return (
     <React.Fragment>
       <Paper style={tableStyle} elevation={0}>

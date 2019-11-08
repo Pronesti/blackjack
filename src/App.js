@@ -16,11 +16,11 @@ const appStyle = { overflow: 'hidden' };
 function App() {
   const [deck] = useState([]);
   const dispatch = useDispatch();
-  const table = useSelector(state => state.app.table);
-  const hand = useSelector(state => state.app.hand);
-  const playerScore = useSelector(state => state.app.scoreHand);
-  const tableScore = useSelector(state => state.app.scoreTable);
-  const readyToCheck = useSelector(state => state.app.readyToCheck);
+  const table = useSelector(state => state.app.game.table);
+  const hand = useSelector(state => state.app.game.hand);
+  const playerScore = useSelector(state => state.app.score.hand);
+  const tableScore = useSelector(state => state.app.score.table);
+  const readyToCheck = useSelector(state => state.app.score.readyToCheck);
 
   function createDeck() {
     dispatch(createNewDeck());
