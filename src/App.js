@@ -18,6 +18,8 @@ function App() {
   const dispatch = useDispatch();
   const table = useSelector(state => state.app.table);
   const hand = useSelector(state => state.app.hand);
+  const playerScore = useSelector(state => state.app.scoreHand);
+  const tableScore = useSelector(state => state.app.scoreTable);
 
   function createDeck() {
     dispatch(createNewDeck());
