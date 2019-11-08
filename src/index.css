@@ -6,30 +6,31 @@
 * {
   padding: 0;
   margin: 0;
-  overflow: 'hidden'
+  overflow: 'hidden';
 }
 .card {
   font-family: Cards;
-  font-size: 1500%; 
+  font-size: 1500%;
 }
 
-.TABLE{
-    margin-top: 5vh;
-    margin-bottom: 20vh;
+.TABLE {
+  margin-top: 5vh;
+  margin-bottom: 20vh;
 }
 
 @media (max-width: 600px) {
-  .card{
+  .card {
     margin-left: -0.45em;
     background-color: white;
     font-size: 1000%;
   }
 
-  .TABLE, .HAND{
+  .TABLE,
+  .HAND {
     margin-left: 20vw;
   }
 
-  .TABLE{
+  .TABLE {
     margin-top: 5vh;
     margin-bottom: 20vh;
   }

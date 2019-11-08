@@ -8,9 +8,5 @@ const cardsArray = {
 };
 
 export default function Card({ number, type }) {
-  return (
-    <span className='card'>
-      {cardsArray[type][number]}
-    </span>
-  );
+  return <span className='card'>{cardsArray[type][number]}</span>;
 }

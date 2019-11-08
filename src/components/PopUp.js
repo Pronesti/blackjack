@@ -15,7 +15,7 @@ export default function PopUp() {
     dispatch(showMsg(false));
   };
 
-  console.log(msg)
+  console.log(msg);
   return (
     <Snackbar open={show_Msg} onClose={handleClose}>
       <SnackbarContent

@@ -13,7 +13,7 @@ function App() {
       <TopBar />
       <BrowserRouter>
         <Switch>
-          <Route exact path='/' component={BlackJack}/>
+          <Route exact path='/' component={BlackJack} />
         </Switch>
       </BrowserRouter>
       <PopUp />

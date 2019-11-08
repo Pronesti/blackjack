@@ -1,5 +1,5 @@
-import React, {useEffect} from 'react';
-import {useSelector, useDispatch } from 'react-redux';
+import React, { useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { addCardToHand, addCardToTable, resetGame, removeCredits, addCredits, setMsg, setStay, setFinishGame, createNewDeck } from '../actions/gameActions';
 import BottomBar from '../components/BottomBar';
 import Paper from '@material-ui/core/Paper';
@@ -69,45 +69,45 @@ export default function BlackJack() {
   }
 
   function checkGame() {
-    if(readyToCheck){
-    console.log('player: ', playerScore, ' table:', tableScore);
-    if (playerScore > 21) {
-      //instant defeat
-      dispatch(setMsg('Table wins.'));
-    }
-    if (tableScore > 21) {
-      // instant win
-      dispatch(setMsg('Player wins.'));
-      if (playerScore === 21) {
-        dispatch(addCredits(3));
-      } else {
-        dispatch(addCredits(2));
+    if (readyToCheck) {
+      console.log('player: ', playerScore, ' table:', tableScore);
+      if (playerScore > 21) {
+        //instant defeat
+        dispatch(setMsg('Table wins.'));
       }
-    } else {
-      if (playerScore === tableScore) {
-        // both equal
-        dispatch(setMsg('It is a tie.'));
-        dispatch(addCredits(1));
-      } else {
-        if (playerScore > tableScore) {
-          // player is greater than table
-          if (playerScore === 21) {
-            //checks for blackjack
-            dispatch(setMsg('BlackJack, you win.'));
-            dispatch(addCredits(3));
-          } else {
-            //pays for normal
-            dispatch(setMsg('Player wins.'));
-            dispatch(addCredits(2));
-          }
+      if (tableScore > 21) {
+        // instant win
+        dispatch(setMsg('Player wins.'));
+        if (playerScore === 21) {
+          dispatch(addCredits(3));
         } else {
-          // table is greater than player
-          dispatch(setMsg('Table wins.'));
+          dispatch(addCredits(2));
+        }
+      } else {
+        if (playerScore === tableScore) {
+          // both equal
+          dispatch(setMsg('It is a tie.'));
+          dispatch(addCredits(1));
+        } else {
+          if (playerScore > tableScore) {
+            // player is greater than table
+            if (playerScore === 21) {
+              //checks for blackjack
+              dispatch(setMsg('BlackJack, you win.'));
+              dispatch(addCredits(3));
+            } else {
+              //pays for normal
+              dispatch(setMsg('Player wins.'));
+              dispatch(addCredits(2));
+            }
+          } else {
+            // table is greater than player
+            dispatch(setMsg('Table wins.'));
+          }
         }
       }
     }
   }
-}
 
   function stay() {
     dispatch(setStay(true));
@@ -128,9 +128,9 @@ export default function BlackJack() {
     }
   }, [hand, dispatch]);
 
-  useEffect(()=>{
+  useEffect(() => {
     checkGame();
-  },[readyToCheck])
+  }, [readyToCheck]);
 
   useEffect(() => {
     createDeck();
@@ -140,21 +140,20 @@ export default function BlackJack() {
   useEffect(() => {
     //Debugger
     console.log({
-       hand,
-       table,
+      hand,
+      table,
       playerScore,
       tableScore
     });
   }, [table, hand]);
-
 
   return (
     <React.Fragment>
       <Paper style={tableStyle} elevation={0}>
         <Container type='TABLE' visible={showCard} cards={table} />
       </Paper>
-      <Paper style={handStyle}  elevation={0}>
-        <Container type='HAND' cards={hand}/>
+      <Paper style={handStyle} elevation={0}>
+        <Container type='HAND' cards={hand} />
       </Paper>
       <BottomBar hitMe={hitMe} stay={stay} restartGame={restartGame} />
     </React.Fragment>
